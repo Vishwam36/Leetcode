@@ -2,7 +2,6 @@
 // https://leetcode.com/problems/minimum-number-of-operations-to-make-string-sorted/
 // Good question and new concept of inverse factorial
 // Ref : https://www.youtube.com/watch?v=Lfiz6iwp4l8&t=1644s&ab_channel=HappyCoding
-
 /*
 You are given a string s (0-indexed You are asked to perform the following operation on s until you get a sorted string:
 
