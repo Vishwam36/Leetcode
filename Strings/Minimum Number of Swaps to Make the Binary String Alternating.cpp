@@ -29,28 +29,13 @@ s[i] is either '0' or '1'.
 
 class Solution {
 public:
-    int findR(char c, string s, string s1)
-    {
-        for(int r = s.size()-1; r > 0; --r)
-            if(s[r] != s1[r])
-                if(s[r] != c)
-                    return r;
-        
-        return 0;
-    }
-    
     int findAns(string s, string s1)
     {
         int ans = 0;
-        for(int l = 0; l < s.size(); ++l)
-        {
-            if(s1[l] != s[l])
-            {
-                int r = findR(s[l], s, s1);
-                swap(s[l], s[r]);
+        for(int i = 0; i < s.size(); ++i)
+            if(s1[i] != s[i])
                 ans++;
-            }
-        }
+        
         return ans;
     }
     
@@ -84,11 +69,11 @@ public:
         }
         
         if(zeros > ones)
-            return findAns(s, s1);
+            return findAns(s, s1)/2;
         
         if(ones > zeros)
-            return findAns(s, s2);
+            return findAns(s, s2)/2;
         
-        return min(findAns(s, s1), findAns(s, s2));
+        return min(findAns(s, s1), findAns(s, s2))/2;
     }
 };
