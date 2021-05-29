@@ -13,8 +13,6 @@ Rearrange the elements of nums2 such that the resulting XOR sum is minimized.
 
 Return the XOR sum after the rearrangement.
 
- 
-
 Example 1:
 Input: nums1 = [1,2], nums2 = [2,3]
 Output: 2
@@ -40,7 +38,7 @@ public:
     vector<vector<int> > m;
     int dp[1000000];
     
-    int rec(int index, vector<int>& nums1, vector<int>& nums2, int sum, int mask)
+    int rec(int index, vector<int>& nums1, vector<int>& nums2, int mask)
     {
         if(index == n)
             return 0;
@@ -54,7 +52,7 @@ public:
             if(((1 << i) & (mask)) != 0) // check if previously ith column element has picked or not
                 continue;
             
-            ans = min(ans, rec(index+1, nums1, nums2, sum, ((mask) | (1 << i)))+m[index][i]); // mask current column and add current m[row][col]
+            ans = min(ans, rec(index+1, nums1, nums2, ((mask) | (1 << i)))+m[index][i]); // mask current column and add curr m[row][col]
             // we dont hasve to worry about marking masking row because each time we are already picking next row
         }
         return dp[mask] = ans;
@@ -71,8 +69,8 @@ public:
                 m[i][j] = nums1[i] ^ nums2[j];
         
         // after calculating this matrix (write down u will get better)
-        // problem is reduced to picking n elements from matrix s.t each element has unique pair of row and column
+        // problem is reduced to picking n elements from matrix s.t each element has unique row and column
         
-        return rec(0, nums1, nums2, 0, 0);
+        return rec(0, nums1, nums2, 0);
     }
 };
