@@ -1,6 +1,6 @@
 // By Vishwam Shriram Mundada
 // https://leetcode.com/problems/min-stack/
-// Decent
+// App 1 is tricky
 
 /*
 Design a stack that supports push, pop, top, and retrieving the minimum element in constant time.
@@ -36,6 +36,65 @@ Constraints:
     Methods pop, top and getMin operations will always be called on non-empty stacks.
     At most 3 * 104 calls will be made to push, pop, top, and getMin.
 */
+
+// Tricky approach
+// Using single stack
+// REF : https://www.youtube.com/watch?v=QMlDCR9xyd8
+
+class MinStack {
+public:
+    stack<long long> s;
+    long long minEle = INT_MAX;
+    
+    MinStack() {
+        
+    }
+    
+    void push(int v) {
+        long long val = v;
+        if(s.empty())
+        {
+            minEle = val;
+            s.push(val);
+        }
+        else if(val >= minEle)
+        {
+            s.push(val);
+        }
+        else
+        {
+            s.push(2*val - minEle);
+            minEle = val;
+        }
+    }
+    
+    void pop() {
+        if(s.top() >= minEle)
+        {
+            s.pop();
+        }
+        else
+        {
+            minEle = 2*minEle - s.top();
+            s.pop();
+        }
+    }
+    
+    int top() {
+        if(s.top() >= minEle)
+            return s.top();
+        else
+            return minEle;
+    }
+    
+    int getMin() {
+        return minEle;
+    }
+};
+
+
+// App 2 : using two stacks 
+// Simple
 
 class MinStack {
 public:
