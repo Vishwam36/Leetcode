@@ -34,7 +34,7 @@ public:
     ListNode* globalHead;    
     map<pair<ListNode*, TreeNode*>, bool> m;
     
-    bool rec(ListNode* head, TreeNode* root, int n1, int n2)
+    bool rec(ListNode* head, TreeNode* root)
     {
         if(head == NULL)
             return true;
@@ -49,9 +49,9 @@ public:
         bool mismatch = false;
         
         if(root->val == head->val)
-            match = rec(head->next, root->left, n1+1, n2+1) || rec(head->next, root->right, n1+1, n2+1);
+            match = rec(head->next, root->left) || rec(head->next, root->right);
         
-        mismatch = rec(globalHead, root->left, n1+1, 0) || rec(globalHead, root->right, n1+1, 0);
+        mismatch = rec(globalHead, root->left) || rec(globalHead, root->right);
         
         return m[{head, root}] = match || mismatch;
     }
@@ -59,6 +59,6 @@ public:
     bool isSubPath(ListNode* head, TreeNode* root) 
     {
         globalHead = head;
-        return rec(head, root, 0, 0);
+        return rec(head, root);
     }
 };
