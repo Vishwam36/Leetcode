@@ -19,7 +19,9 @@ Constraints:
     The tree nodes will have distinct values between 1 and 10^5.
 */
 
- */
+// We can use vector of Nodes instead of int and directly make left right connections in it, then space used will decrease but SC will still remain same
+// REF : https://www.geeksforgeeks.org/convert-normal-bst-balanced-bst/
+
 class Solution {
 public:
     vector<int> in;
