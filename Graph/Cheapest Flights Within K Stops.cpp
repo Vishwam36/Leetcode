@@ -1,42 +1,45 @@
 // By Vishwam Shriram Mundada
 // https://leetcode.com/problems/cheapest-flights-within-k-stops/
-// Decent
+// Decent, BFS
+// IDK why Dijkstra is giving TLE
 
 class Solution {
 public:
     int findCheapestPrice(int n, vector<vector<int>>& flights, int src, int dst, int k) 
     {
-        vector<pair<int, int> > v[n];
+        vector<pair<int, int> > adj[n];
+        for(auto f : flights)
+            adj[f[0]].push_back( {f[1], f[2]} );
         
-        for(int i = 0; i < flights.size(); ++i)
-            v[flights[i][0]].push_back( { flights[i][1], flights[i][2] } );
+        vector<int> dist(n, INT_MAX);
+        dist[src] = 0;
         
-        priority_queue<vector<int>, vector<vector<int> >, greater<vector<int> > > pq;
-        pq.push({0, src, k});
+        queue<pair<int, int> > q;
+        q.push({src, 0});
         
-        while(!pq.empty())
+        while(!q.empty() && k >= 0)
         {
-            vector<int> curr = pq.top();
-            pq.pop();
-            
-            int cost = curr[0];
-            int currNode = curr[1];
-            int stops = curr[2];
-            
-            if(currNode == dst)
-                return cost;
-            
-            if(stops < 0)
-                continue;
-            
-            for(int i = 0; i < v[currNode].size(); ++i)
+            int len = q.size();
+            while(len--)
             {
-                int nextNode = v[currNode][i].first;
-                int nextCost = v[currNode][i].second;
-                
-                pq.push({cost + nextCost, nextNode, stops-1});
+                int curr = q.front().first;
+                int d = q.front().second;
+                q.pop();
+                                
+                for(int i = 0; i < adj[curr].size(); ++i)
+                {
+                    auto next = adj[curr][i];
+                    
+                    if(dist[next.first] > d + next.second) // we have to use here d and not dist[..] because we cant use updated distances
+                    {
+                        dist[next.first] = d + next.second;
+                        q.push({next.first, dist[next.first]});
+                    }
+                }
             }
+            --k;
         }
-        return -1;
+        
+        return dist[dst] == INT_MAX ? -1 : dist[dst];
     }
 };
