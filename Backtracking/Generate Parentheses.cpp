@@ -11,39 +11,31 @@ Output: ["((()))","(()())","(())()","()(())","()()()"]
 
 class Solution {
 public:
-    void rec(int n, int open, int close, string temp, vector<string> &ans)
+    vector<string> ans;
+    
+    void rec(int open, int close, string &temp)
     {
-        if(open > n)
-            return;
-        
-        if(close == n && open == close)
-        {
+        if(open == 0 && close == 0)
             ans.push_back(temp);
-            return;
-        }
-        
-        if(open == close)
+                
+        if(open)
         {
             temp.push_back('(');
-            rec(n, open+1, close, temp, ans);
-        }
-        if(open > close && open <= n)
-        {
-            temp.push_back('(');
-            rec(n, open+1, close, temp, ans);
+            rec(open-1, close, temp);
             temp.pop_back();
-            
+        }
+        if(close && open < close)
+        {
             temp.push_back(')');
-            rec(n, open, close+1, temp, ans);
+            rec(open, close-1, temp);
             temp.pop_back();
         }
     }
     
     vector<string> generateParenthesis(int n) 
     {
-        vector<string> ans;
-        ans.clear();
-        rec(n, 0, 0, "", ans);
+        string temp;
+        rec(n, n, temp);
         return ans;
     }
 };
