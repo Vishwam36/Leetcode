@@ -27,55 +27,93 @@ Constraints:
 s consist of only digits and English letters (lower-case and/or upper-case),
 */
 
+
+// App 1 : 
+// TC : O(N^2)
+// SC : O(N^2)
+
 class Solution {
 public:
-    bool dp[1001][1001];
-    int l = 0, size = 0;
-    
-    void setSize(int x, int y)
+    string longestPalindrome(string s) 
     {
-        if(size < y-x+1)
-        {
-            l = x;
-            size = y-x+1;
-        }
-    }
-    
-    void rec(string s)
-    {
-        int n = s.size();
+        int n = s.size(), idx = 0, size = 0;
+        vector<vector<bool> > dp(n, vector<bool>(n, false));
+        
         for(int gap = 0; gap < n; ++gap)
         {
-            for(int j = 0; j+gap < n; ++j)
+            for(int i = 0; i+gap < n; ++i)
             {
-                int x = j;
-                int y = j+gap;
+                int x = i;
+                int y = i+gap;
                 
-                if(x == y)
-                {
-                    dp[x][y] = true;
-                    if(dp[x][y])
-                        setSize(x, y);
-                    continue;
-                }
-                if(y-x == 1)
-                {
+                if(y-x <= 1)
                     dp[x][y] = s[x] == s[y];
-                    if(dp[x][y])
-                        setSize(x, y);
-                    continue;
+                else
+                    dp[x][y] = dp[x+1][y-1] && s[x] == s[y];
+                
+                if(dp[x][y] && y-x+1 > size)
+                {
+                    size = y-x+1;
+                    idx = x;
                 }
-                dp[x][y] = dp[x+1][y-1] && s[x] == s[y];
-                if(dp[x][y])
-                    setSize(x, y);
             }
         }
+        
+        return s.substr(idx, size);
+    }
+};
+
+
+// App 2 : 
+// TC : O(N^2)
+// SC : O(N) for storing answer string
+
+class Solution {
+public:
+    bool isPali(string &s)
+    {
+        int l = 0, r = s.size()-1;
+        while(r > l)
+            if(s[l++] != s[r--])
+                return false;
+        
+        return true;
     }
     
     string longestPalindrome(string s) 
     {
-        memset(dp, false, sizeof(dp));
-        rec(s);
-        return s.substr(l, size);
+        int n = s.size(), idx = 0, max_size = 0;
+        for(int mid = 0; mid < n; ++mid)
+        {
+            for(int size = max_size+1; mid-size >= 0 && mid+size < n; ++size)
+            {
+                string news = s.substr(mid-size, size) + s.substr(mid, 1) + s.substr(mid+1, size);
+                if(size > max_size && isPali(news))
+                    idx = mid, max_size = size;
+                else
+                    break;
+            }
+        }
+        string ans1 = s.substr(idx-max_size, max_size) + s.substr(idx, 1) + s.substr(idx+1, max_size);
+        
+        idx = -1;
+        for(int mid = 1; mid < n; ++mid)
+        {
+            for(int size = max_size + 1; mid-size >= 0 && mid+size <= n; ++size)
+            {
+                string news = s.substr(mid-size, size) + s.substr(mid, size);
+                if(size > max_size && isPali(news))
+                    idx = mid, max_size = size;
+                else
+                    break;
+            }
+        }
+        string ans2;
+        if(idx != -1)
+            ans2 = s.substr(idx-max_size, max_size) + s.substr(idx, max_size);
+        
+        if(ans1.size() > ans2.size())
+            return ans1;
+        return ans2;
     }
 };
