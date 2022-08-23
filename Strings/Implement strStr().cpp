@@ -1,6 +1,6 @@
 // By Vishwam Shriram Mundada
 // https://leetcode.com/explore/interview/card/top-interview-questions-easy/127/strings/885/
-// Rolling hash
+// Rolling hash || KMP
 
 /*
 Implement strStr().
@@ -82,6 +82,80 @@ public:
             if(needle_hash % mod == hash % mod)
                 return i-k+1;
         }
+        return -1;
+    }
+};
+
+
+// KMP Algo
+
+class Solution {
+public:
+    int strStr(string text, string pat)
+    {
+        int nt = text.size(), np = pat.size();
+        vector<int> p(np, 0);
+        
+        int i = 0, j = 1;
+        while(j < np)
+        {
+            if(pat[i] == pat[j])
+            {
+                p[j] = i+1;
+                ++i;
+                ++j;
+            }
+            else
+            {
+                int x = j;
+                while(i > 0)
+                {
+                    i = p[x-1];
+                    x = i;
+                    if(pat[i] == pat[j])
+                    {
+                        p[j] = i+1;
+                        ++i;
+                        ++j;
+                        break;
+                    }
+                }
+                if(i == 0)
+                {
+                    p[j] = 0;
+                    j++;
+                    i = 0;
+                }
+            }
+        }
+        
+        j = 0;
+        for(int i = 0 ; i < nt; ++i)
+        {
+            if(text[i] == pat[j])
+            {
+                if(j == np-1)
+                    return i-np+1;
+                
+                j++;
+            }
+            else
+            {
+                while(j > 0)
+                {
+                    j = p[j-1];
+                    if(pat[j] == text[i])
+                    {
+                        ++j;
+                        break;
+                    }
+                }
+                
+                if(j == 0 && pat[j] == text[i])
+                    ++j;
+            }
+        }
+        
         return -1;
     }
 };
